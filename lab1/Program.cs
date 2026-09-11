@@ -137,6 +137,28 @@ namespace GeneticSearch
             }
         }
 
+        static void HandleSearch(List<Protein> proteins, string searchSequence, StreamWriter writer)
+            {
+    string decodedSearch = Decoding(searchSequence);
+    bool found = false;
+
+    writer.WriteLine("organism\t\t\t\tprotein");
+
+    foreach (Protein protein in proteins)
+    {
+        if (protein.amino_acids.Contains(decodedSearch))
+        {
+            writer.WriteLine(protein.organism + "\t\t" + protein.name);
+            found = true;
+        }
+    }
+
+    if (!found)
+    {
+        writer.WriteLine("NOT FOUND");
+    }
+}
+
         static void CommandHandler(List<Protein> proteins, List<Command> commands)
         {
             for (int i = 0; i < commands.Count; i++)
