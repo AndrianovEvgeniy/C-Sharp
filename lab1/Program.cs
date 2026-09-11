@@ -138,25 +138,66 @@ namespace GeneticSearch
         }
 
         static void HandleSearch(List<Protein> proteins, string searchSequence, StreamWriter writer)
-            {
-    string decodedSearch = Decoding(searchSequence);
-    bool found = false;
-
-    writer.WriteLine("organism\t\t\t\tprotein");
-
-    foreach (Protein protein in proteins)
-    {
-        if (protein.amino_acids.Contains(decodedSearch))
         {
-            writer.WriteLine(protein.organism + "\t\t" + protein.name);
-            found = true;
+            string decodedSearch = Decoding(searchSequence);
+            bool found = false;
+
+            writer.WriteLine("organism\t\t\t\tprotein");
+
+            foreach (Protein protein in proteins)
+            {
+                if (protein.amino_acids.Contains(decodedSearch))
+                {
+                    writer.WriteLine(protein.organism + "\t\t" + protein.name);
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {   
+                writer.WriteLine("NOT FOUND");
+            }
         }
+
+        static void HandleDiff(List<Protein> proteins, string protein1Name, string protein2Name, StreamWriter writer)
+        {
+            Protein? p1 = null;
+            Protein? p2 = null;
+
+        foreach (Protein protein in proteins)
+        {
+            if (protein.name == protein1Name) p1 = protein;
+            if (protein.name == protein2Name) p2 = protein;
+        }
+
+    writer.WriteLine("amino-acids difference:");
+
+    if (p1 == null || p2 == null)
+    {
+        string missing = "";
+        if (p1 == null) missing += protein1Name;
+        if (p2 == null)
+        {
+            if (missing != "") missing += ", ";
+            missing += protein2Name;
+        }
+        writer.WriteLine("MISSING: " + missing);
+        return;
     }
 
-    if (!found)
+    string seq1 = p1.Value.amino_acids;
+    string seq2 = p2.Value.amino_acids;
+    int maxLength = Math.Max(seq1.Length, seq2.Length);
+    int differences = 0;
+
+    for (int i = 0; i < maxLength; i++)
     {
-        writer.WriteLine("NOT FOUND");
+        char c1 = i < seq1.Length ? seq1[i] : '\0';
+        char c2 = i < seq2.Length ? seq2[i] : '\0';
+        if (c1 != c2) differences++;
     }
+
+    writer.WriteLine(differences.ToString());
 }
 
         static void CommandHandler(List<Protein> proteins, List<Command> commands)
