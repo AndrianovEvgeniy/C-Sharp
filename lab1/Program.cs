@@ -296,6 +296,18 @@ namespace GeneticSearch
             }
         }
 
+        static void PrintStartupInfo(string sequencesFile, string commandsFile, string outputFile, int proteinsCount, int commandsCount)
+        {
+            Console.WriteLine("=== GENETIC SEARCH ===");
+            Console.WriteLine($"Input sequences: {sequencesFile}");
+            Console.WriteLine($"Input commands: {commandsFile}");
+            Console.WriteLine($"Output file: {outputFile}");
+            Console.WriteLine();
+            Console.WriteLine($"Loaded {proteinsCount} proteins");
+            Console.WriteLine($"Loaded {commandsCount} commands");
+            Console.WriteLine();
+        }
+
         static void Main(string[] args)
         {
             string sequencesFile = "sequences.0.txt";
@@ -312,18 +324,10 @@ namespace GeneticSearch
             if (args.Length >= 4)
                 authorName = args[3];
 
-            Console.WriteLine("=== GENETIC SEARCH ===");
-            Console.WriteLine($"Input sequences: {sequencesFile}");
-            Console.WriteLine($"Input commands: {commandsFile}");
-            Console.WriteLine($"Output file: {outputFile}");
-            Console.WriteLine();
-
             List<Protein> data = ReadData(sequencesFile);
-            Console.WriteLine($"Loaded {data.Count} proteins");
-
             List<Command> commands = ReadCommands(commandsFile);
-            Console.WriteLine($"Loaded {commands.Count} commands");
-            Console.WriteLine();
+
+            PrintStartupInfo(sequencesFile, commandsFile, outputFile, data.Count, commands.Count);
 
             CommandHandler(data, commands, outputFile, authorName);
 
