@@ -27,6 +27,19 @@ namespace CatAndMouse
             state = GameState.Start;
         }
 
+        private void DoMoveCommand(char command, int steps)
+        {
+            switch (command)
+            {
+                case 'M':
+                    mouse.Move(steps, size);
+                    break;
+                case 'C':
+                    cat.Move(steps, size);
+                    break;
+            }
+        }
+
         private int GetDistance()
         {
             if (cat.state == State.NotInGame || mouse.state == State.NotInGame)
