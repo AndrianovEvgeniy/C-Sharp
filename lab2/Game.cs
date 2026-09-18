@@ -26,7 +26,62 @@ namespace CatAndMouse
             mouse = new Player("Mouse");
             state = GameState.Start;
         }
+        public void Run()
+        {
+            string[] lines = File.ReadAllLines(InputFile);
+            size = int.Parse(lines[0].Trim());
 
+            writer = new StreamWriter(OutFile);
+            writer.WriteLine("Cat and Mouse");
+            writer.WriteLine();
+            writer.WriteLine("Cat Mouse  Distance");
+            writer.WriteLine("-------------------");
+
+            bool mouseCaught = false;
+            int caughtAt = -1;
+
+            for (int i = 1; i < lines.Length && state != GameState.End; i++)
+            {
+                string line = lines[i].Trim();
+                if (string.IsNullOrEmpty(line)) continue;
+
+                string[] parts = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                char command = parts[0][0];
+
+                switch (command)
+                {
+                    case 'M':
+                    case 'C':
+                        int steps = int.Parse(parts[1]);
+                        DoMoveCommand(command, steps);
+                        if (cat.state == State.Playing && mouse.state == State.Playing
+                            && cat.location == mouse.location)
+                        {
+                            mouseCaught = true;
+                            caughtAt = cat.location;
+                            state = GameState.End;
+                        }
+                        break;
+                    case 'P':
+                        DoPrintCommand();
+                        break;
+                }
+            }
+
+            writer.WriteLine("-------------------");
+            writer.WriteLine();
+            writer.WriteLine();
+            writer.WriteLine("Distance traveled:   Mouse    Cat");
+            writer.WriteLine($"                        {mouse.distanceTraveled}      {cat.distanceTraveled}");
+            writer.WriteLine();
+
+            if (mouseCaught)
+                writer.WriteLine($"Mouse caught at: {caughtAt}");
+            else
+                writer.WriteLine("Mouse evaded Cat");
+
+            writer.Close();
+        }
         private void DoMoveCommand(char command, int steps)
         {
             switch (command)
