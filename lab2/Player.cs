@@ -22,5 +22,21 @@ namespace CatAndMouse
             this.name = name;
             this.location = -1;
         }
+
+        public void Move(int steps, int fieldSize)
+        {
+            if (state == State.NotInGame)
+            {
+                // Установка начальной позиции
+                location = ((steps - 1) % fieldSize + fieldSize) % fieldSize + 1;
+                state = State.Playing;
+                return;
+            }
+
+            distanceTraveled += Math.Abs(steps);
+            int newPos = location + steps;
+            // Приведение к диапазону 1..fieldSize (по кругу)
+            location = ((newPos - 1) % fieldSize + fieldSize) % fieldSize + 1;
+        }
     }
 }
