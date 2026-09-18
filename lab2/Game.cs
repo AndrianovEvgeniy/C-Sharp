@@ -18,7 +18,7 @@ namespace CatAndMouse
         public Player cat;
         public Player mouse;
         public GameState state;
-
+        private StreamWriter writer;
         public Game(int size)
         {
             this.size = size;
@@ -37,6 +37,21 @@ namespace CatAndMouse
                 case 'C':
                     cat.Move(steps, size);
                     break;
+            }
+        }
+
+        private void DoPrintCommand()
+        {
+            string catStr = cat.state == State.NotInGame ? "??" : cat.location.ToString();
+            string mouseStr = mouse.state == State.NotInGame ? "??" : mouse.location.ToString();
+
+            if (cat.state != State.NotInGame && mouse.state != State.NotInGame)
+            {
+                writer.WriteLine($"{catStr,3}{mouseStr,6}{GetDistance(),10}");
+            }
+            else
+            {
+                writer.WriteLine($"{catStr,3}{mouseStr,6}");
             }
         }
 
