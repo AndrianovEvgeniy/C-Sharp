@@ -26,5 +26,14 @@ namespace CatAndMouse
             mouse = new Player("Mouse");
             state = GameState.Start;
         }
+
+        private int GetDistance()
+        {
+            if (cat.state == State.NotInGame || mouse.state == State.NotInGame)
+                return -1; // не определено
+
+            int diff = Math.Abs(cat.location - mouse.location);
+            return Math.Min(diff, size - diff);
+        }
     }
 }
