@@ -54,7 +54,9 @@ namespace CatAndMouse
                     case 'C':
                         int steps = int.Parse(parts[1]);
                         DoMoveCommand(command, steps);
-                        if (cat.state == State.Playing && mouse.state == State.Playing
+
+                        // ← ВОТ ЭТА ПРОВЕРКА (заменил state != NotInGame на location != -1)
+                        if (cat.location != -1 && mouse.location != -1
                             && cat.location == mouse.location)
                         {
                             mouseCaught = true;
@@ -62,6 +64,7 @@ namespace CatAndMouse
                             state = GameState.End;
                         }
                         break;
+
                     case 'P':
                         DoPrintCommand();
                         break;
@@ -97,24 +100,17 @@ namespace CatAndMouse
 
         private void DoPrintCommand()
         {
-            string catStr = cat.state == State.NotInGame ? "??" : cat.location.ToString();
-            string mouseStr = mouse.state == State.NotInGame ? "??" : mouse.location.ToString();
+            string catStr = cat.location == -1 ? "??" : cat.location.ToString();
+            string mouseStr = mouse.location == -1 ? "??" : mouse.location.ToString();
 
-            if (cat.state != State.NotInGame && mouse.state != State.NotInGame)
-            {
+            if (cat.location != -1 && mouse.location != -1)
                 writer.WriteLine($"{catStr,3}{mouseStr,6}{GetDistance(),10}");
-            }
             else
-            {
                 writer.WriteLine($"{catStr,3}{mouseStr,6}");
-            }
         }
 
         private int GetDistance()
         {
-            if (cat.state == State.NotInGame || mouse.state == State.NotInGame)
-                return -1; // не определено
-
             int diff = Math.Abs(cat.location - mouse.location);
             return Math.Min(diff, size - diff);
         }

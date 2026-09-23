@@ -6,15 +6,14 @@ namespace CatAndMouse
     {
         Winner,
         Loser,
-        Playing,
-        NotInGame
+        Playing
     }
 
     public class Player
     {
         public string name;
         public int location;
-        public State state = State.NotInGame;
+        public State state = State.Playing;
         public int distanceTraveled = 0;
 
         public Player(string name)
@@ -25,17 +24,14 @@ namespace CatAndMouse
 
         public void Move(int steps, int fieldSize)
         {
-            if (state == State.NotInGame)
+            if (location == -1)   // первый вызов — это размещение, не ход
             {
-                // Установка начальной позиции
                 location = ((steps - 1) % fieldSize + fieldSize) % fieldSize + 1;
-                state = State.Playing;
                 return;
             }
 
             distanceTraveled += Math.Abs(steps);
             int newPos = location + steps;
-            // Приведение к диапазону 1..fieldSize (по кругу)
             location = ((newPos - 1) % fieldSize + fieldSize) % fieldSize + 1;
         }
     }
