@@ -74,8 +74,12 @@ namespace CatAndMouse
             writer.WriteLine("-------------------");
             writer.WriteLine();
             writer.WriteLine();
+
+            string mouseDist = mouse.location == -1 ? "??" : mouse.distanceTraveled.ToString();
+            string catDist = cat.location == -1 ? "??" : cat.distanceTraveled.ToString();
+
             writer.WriteLine("Distance traveled:   Mouse    Cat");
-            writer.WriteLine($"                        {mouse.distanceTraveled}      {cat.distanceTraveled}");
+            writer.WriteLine($"                        {mouseDist}      {catDist}");
             writer.WriteLine();
 
             if (mouseCaught)
